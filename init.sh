@@ -1,124 +1,85 @@
-#!/bin/sh 
-DEMO="Install Demo"
-AUTHORS="Red Hat"
-PROJECT="git@github.com:jbossdemocentral/rhpam7-install-demo.git"
-PRODUCT="Red Hat Process Automation Manager"
-JBOSS_HOME=./target/jboss-eap-7.3
+#!/usr/bin/env sh
+
+# Install REPAM 7.7.0
+# AUTHORS: "Red Hat"
+# PRODUCT: "Red Hat Process Automation Manager"
+# https://raw.githubusercontent.com/jbossdemocentral/rhpam7-install-demo/master/init.sh
+
+# CHANGE THESE
+SRC_DIR=/vagrant/.installs
+SUPPORT_DIR=/vagrant/.support
+
+VERSION=7.7.0
+JBOSS_USER=jboss
+TARGET=/opt/jboss
+JBOSS_EAP=jboss-eap-7.2
+JBOSS_HOME=$TARGET/$JBOSS_EAP
 SERVER_DIR=$JBOSS_HOME/standalone/deployments
 SERVER_CONF=$JBOSS_HOME/standalone/configuration/
 SERVER_BIN=$JBOSS_HOME/bin
-SRC_DIR=./installs
-SUPPORT_DIR=./support
-PRJ_DIR=./projects
-VERSION_EAP=7.3.0
-VERSION=7.8.0
-EAP=jboss-eap-$VERSION_EAP.zip
-RHPAM=rhpam-$VERSION-business-central-eap7-deployable.zip
-RHPAM_KIE_SERVER=rhpam-$VERSION-kie-server-ee8.zip
-RHPAM_ADDONS=rhpam-$VERSION-add-ons.zip
-RHPAM_CASE=rhpam-$VERSION-case-mgmt-showcase-eap7-deployable.zip
+PAM_BUSINESS_CENTRAL=rhpam-$VERSION-business-central-eap7-deployable.zip
+PAM_KIE_SERVER=rhpam-$VERSION-kie-server-ee8.zip
+PAM_ADDONS=rhpam-$VERSION-add-ons.zip
+PAM_CASE_MGMT=rhpam-7.7.0-case-mgmt-showcase-eap7-deployable.zip
+EAP=jboss-eap-7.2.0.zip
 
-# wipe screen.
-clear 
+mkdir -p $TARGET
+# Create user if not exists
+id -u $JBOSS_USER &>/dev/null || useradd $JBOSS_USER
 
-echo
-echo "###################################################################"
-echo "##                                                               ##"   
-echo "##  Setting up the                                               ##"
-echo "##                                                               ##"   
-echo "##             ####  ##### ####     #   #  ###  #####            ##"
-echo "##             #   # #     #   #    #   # #   #   #              ##"
-echo "##             ####  ###   #   #    ##### #####   #              ##"
-echo "##             #  #  #     #   #    #   # #   #   #              ##"
-echo "##             #   # ##### ####     #   # #   #   #              ##"
-echo "##                                                               ##"
-echo "##           ####  ####   ###   #### #####  ####  ####           ##"
-echo "##           #   # #   # #   # #     #     #     #               ##"
-echo "##           ####  ####  #   # #     ###    ###   ###            ##"
-echo "##           #     #  #  #   # #     #         #     #           ##"
-echo "##           #     #   #  ###   #### ##### ####  ####            ##"
-echo "##                                                               ##"
-echo "##   ###  #   # #####  ###  #   #  ###  ##### #####  ###  #   #  ##"
-echo "##  #   # #   #   #   #   # ## ## #   #   #     #   #   # ##  #  ##"
-echo "##  ##### #   #   #   #   # # # # #####   #     #   #   # # # #  ##"
-echo "##  #   # #   #   #   #   # #   # #   #   #     #   #   # #  ##  ##"
-echo "##  #   # #####   #    ###  #   # #   #   #   #####  ###  #   #  ##"
-echo "##                                                               ##"
-echo "##           #   #  ###  #   #  ###  ##### ##### ####            ##"
-echo "##           ## ## #   # ##  # #   # #     #     #   #           ##"
-echo "##           # # # ##### # # # ##### #  ## ###   ####            ##"
-echo "##           #   # #   # #  ## #   # #   # #     #  #            ##"
-echo "##           #   # #   # #   # #   # ##### ##### #   #           ##"
-echo "##                                                               ##"   
-echo "##  brought to you by, ${AUTHORS}                            ##"
-echo "##                                                               ##"   
-echo "##  ${PROJECT}      ##"
-echo "##                                                               ##"   
-echo "###################################################################"
-echo
-
-# make some checks first before proceeding.	
-if [ -r $SUPPORT_DIR ] || [ -L $SUPPORT_DIR ]; then
-        echo "Support dir is presented..."
-        echo
-else
-        echo "$SUPPORT_DIR wasn't found. Please make sure to run this script inside the demo directory."
-        echo
-        exit
-fi
-
+# make some checks first before proceeding.
 if [ -r $SRC_DIR/$EAP ] || [ -L $SRC_DIR/$EAP ]; then
-	echo "Product EAP sources are present..."
+	echo Product sources are present...
 	echo
 else
-	echo "Need to download $EAP package from https://developers.redhat.com/products/eap/download"
-	echo "and place it in the $SRC_DIR directory to proceed..."
+	echo Need to download $EAP package from http://developers.redhat.com
+	echo and place it in the $SRC_DIR directory to proceed...
 	echo
 	exit
 fi
 
-if [ -r $SRC_DIR/$RHPAM ] || [ -L $SRC_DIR/$RHPAM ]; then
-	echo "Product Red Hat Process Automation Manager sources are present..."
+if [ -r $SRC_DIR/$PAM_BUSINESS_CENTRAL ] || [ -L $SRC_DIR/$PAM_BUSINESS_CENTRAL ]; then
+	echo Product sources are present...
 	echo
 else
-	echo "Need to download $RHPAM package from https://developers.redhat.com/products/rhpam/download"
-	echo "and place it in the $SRC_DIR directory to proceed..."
+	echo Need to download $PAM_BUSINESS_CENTRAL zip from http://developers.redhat.com
+	echo and place it in the $SRC_DIR directory to proceed...
 	echo
 	exit
 fi
 
-if [ -r $SRC_DIR/$RHPAM_KIE_SERVER ] || [ -L $SRC_DIR/$RHPAM_KIE_SERVER ]; then
-	echo "Product Red Hat Process Automation Manager KIE Server sources are present..."
+if [ -r $SRC_DIR/$PAM_KIE_SERVER ] || [ -L $SRC_DIR/$PAM_KIE_SERVER ]; then
+	echo Product sources are present...
 	echo
 else
-	echo "Need to download $RHPAM_KIE_SERVER package from https://developers.redhat.com/products/rhpam/download"
-	echo "and place it in the $SRC_DIR directory to proceed..."
+	echo Need to download $PAM_KIE_SERVER zip from http://developers.redhat.com
+	echo and place it in the $SRC_DIR directory to proceed...
 	echo
 	exit
 fi
 
-if [ -r $SRC_DIR/$RHPAM_ADDONS ] || [ -L $SRC_DIR/$RHPAM_ADDONS ]; then
-	echo "Product Red Hat Process Automation Manager Case Management sources are present..."
+if [ -r $SRC_DIR/$PAM_ADDONS ] || [ -L $SRC_DIR/PAM_ADDONS ]; then
+	echo Product sources are present...
 	echo
 else
-	echo "Need to download $RHPAM_ADDONS package from https://developers.redhat.com/products/rhpam/download"
-	echo "and place it in the $SRC_DIR directory to proceed..."
+	echo Need to download $PAM_ADDONS zip from http://developers.redhat.com
+	echo and place it in the $SRC_DIR directory to proceed...
 	echo
 	exit
 fi
 
-# Remove the old JBoss instance, if it exists.
+# Check JBoss instance, if it exists.
 if [ -x $JBOSS_HOME ]; then
-		echo "  - removing existing JBoss product..."
-		echo
-		rm -rf $JBOSS_HOME
+	echo " 	Error occurred during JBoss EAP installation! "
+	echo "  JBOSS installation already exists "
+	echo
+	exit
 fi
 
-# Installation.
-echo "JBoss EAP installation running now..."
+# Run installers.
+echo "Provisioning JBoss EAP now..."
 echo
-mkdir -p ./target
-unzip -qo $SRC_DIR/$EAP -d target
+unzip -qo $SRC_DIR/$EAP -d $TARGET
 
 if [ $? -ne 0 ]; then
 	echo
@@ -126,46 +87,51 @@ if [ $? -ne 0 ]; then
 	exit
 fi
 
-echo "Red Hat Process Automation Manager installation running now..."
 echo
-unzip -qo $SRC_DIR/$RHPAM -d target
+echo "Deploying Red Hat Process Automation Manager: Business Central now..."
+echo
+unzip -qo $SRC_DIR/$PAM_BUSINESS_CENTRAL -d $TARGET
 
 if [ $? -ne 0 ]; then
-	echo
-	echo Error occurred during Red Hat Process Manager installation!
+	echo Error occurred during $PRODUCT installation
 	exit
 fi
 
-echo "Red Hat Process Automation Manager Kie Server installation running now..."
 echo
-unzip -qo $SRC_DIR/$RHPAM_KIE_SERVER  -d $JBOSS_HOME/standalone/deployments 
+echo "Deploying Red Hat Process Automation Manager: Process Server now..."
+echo
+unzip -qo $SRC_DIR/$PAM_KIE_SERVER -d $SERVER_DIR
 
 if [ $? -ne 0 ]; then
-	echo
-	echo Error occurred during Red Hat Process Manager Kie Server installation!
+	echo Error occurred during $PRODUCT installation
 	exit
 fi
+touch $SERVER_DIR/kie-server.war.dodeploy
 
-# Set deployment Kie Server.
-touch $JBOSS_HOME/standalone/deployments/kie-server.war.dodeploy
-
-echo "Red Hat Process Automation Manager Case Management installation running now..."
 echo
-unzip -qo $SRC_DIR/$RHPAM_ADDONS $RHPAM_CASE -d $SRC_DIR
-unzip -qo $SRC_DIR/$RHPAM_CASE -d target
-rm $SRC_DIR/$RHPAM_CASE
+echo "Deploying Red Hat Process Automation Manager: Case Management Showcase now..."
+echo
+
+unzip -qo $SRC_DIR/$PAM_ADDONS $PAM_CASE_MGMT -d $TARGET
+unzip -qo $TARGET/$PAM_CASE_MGMT -d $TARGET
+rm $TARGET/$PAM_CASE_MGMT
 
 if [ $? -ne 0 ]; then
-	echo
-	echo Error occurred during Red Hat Process Manager Case Management installation!
+	echo Error occurred during $PRODUCT installation
 	exit
 fi
 
 # Set deployment Case Management.
 touch $JBOSS_HOME/standalone/deployments/rhpam-case-mgmt-showcase.war.dodeploy
 
+echo
 echo "  - enabling demo accounts role setup..."
 echo
+
+echo "  - setup manager realm user 'admin' with password 'manageME.2020'..."
+echo
+$JBOSS_HOME/bin/add-user.sh -u admin -p manageME.2020 -ro analyst,admin,manager,user,kie-server,kiemgmt,rest-all --silent
+
 echo "  - adding user 'pamAdmin' with password 'redhatpam1!'..."
 echo
 $JBOSS_HOME/bin/add-user.sh -a -r ApplicationRealm -u pamAdmin -p redhatpam1! -ro analyst,admin,manager,user,kie-server,kiemgmt,rest-all --silent
@@ -198,27 +164,37 @@ echo "  - setup email task notification users..."
 echo
 cp $SUPPORT_DIR/userinfo.properties $SERVER_DIR/business-central.war/WEB-INF/classes/
 
-# Add execute permissions to the standalone.sh script.
-echo "  - making sure standalone.sh for server is executable..."
+echo "  - making sure server is executable..."
 echo
+chown -R $JBOSS_USER:$JBOSS_USER $JBOSS_HOME
 chmod u+x $JBOSS_HOME/bin/standalone.sh
+cp $SUPPORT_DIR/jboss-service.sh /etc/init.d/jbossas7
+chmod 755 /etc/init.d/jbossas7
+
+/etc/init.d/jbossas7 start
 
 echo "=============================================================="
 echo "=                                                            ="
-echo "=  $PRODUCT $VERSION setup complete.  ="
+echo "=  $PRODUCT $VERSION setup complete. 												 ="
 echo "=                                                            ="
-echo "=  Start $PRODUCT with:            ="
+echo "=  Start $PRODUCT with:            													 ="
 echo "=                                                            ="
-echo "=           $SERVER_BIN/standalone.sh         ="
+echo "=           $SERVER_BIN/standalone.sh        								 ="
 echo "=                                                            ="
 echo "=  Log in to Red Hat Process Automation Manager to start     ="
 echo "=  developing rules projects:                                ="
 echo "=                                                            ="
-echo "=  http://localhost:8080/business-central                    ="
+echo "=  http://192.168.42.42:8857/business-central                ="
+echo "=  http://192.168.42.42:8857/rhpam-case-mgmt-showcase        ="
 echo "=                                                            ="
 echo "=    Log in: [ u:pamAdmin / p:redhatpam1! ]                  ="
 echo "=                                                            ="
-echo "=  http://localhost:8080/rhpam-case-mgmt-showcase            ="
+echo "=  Admin Console:                                            ="
+echo "=  http://192.168.42.42:10767/console 											 ="
+echo "=                                                            ="
+echo "=    Log in: [ u:admin / p:manageME.2020 ]	                 ="
+echo "=                                                            ="
+echo "=  OFFSET PORT IS 777                                        ="
 echo "=                                                            ="
 echo "=    Others:                                                 ="
 echo "=            [ u:kieserver / p:kieserver1! ]                 ="
@@ -228,4 +204,3 @@ echo "=            [ u:caseSupplier / p:redhatpam1! ]              ="
 echo "=                                                            ="
 echo "=============================================================="
 echo
-

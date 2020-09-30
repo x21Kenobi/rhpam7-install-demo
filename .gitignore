@@ -1,10 +1,10 @@
 /target
+/.vagrant
 /.dockerignore
 /Dockerfile
 /.index
 /.niogit
 /.security
 /.kie-wb-playground
+/.installs
 .DS_STORE
-
-

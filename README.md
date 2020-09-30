@@ -1,58 +1,38 @@
 Red Hat Process Automation Manager 7 Install Demo
 =================================================
-Project to automate the installation of this product without preconfiguration beyond a single admin user.
 
-You can install this project on your own machine or on an OpenShift Container Platform.
+This project is a fork from https://github.com/jbossdemocentral/rhpam7-install-demo
+It was been customizzed for a specific use-case.
 
+### Start Demo
 
-Installing on local machine
----------------------------
-1. [Download and unzip](https://github.com/jbossdemocentral/rhpam7-install-demo/archive/master.zip) 
-   or [clone this repo](https://github.com/jbossdemocentral/rhpam7-install-demo.git).
+#### Requirements
 
-2. Add products to installs directory, see installs/README for details and links.
+You have to install on your workstation the following software:
 
-3. Run 'init.sh' or 'init.bat' file. 'init.bat' must be run with Administrative privileges.
+ - vagrant
+ - virtualbox
 
-Follow install output instructions and log in to http://localhost:8080/business-central (u:pamAdmin / p:redhatdm1!)
+Also, you have to create and add in `.installs` folder the JBOSS application packages:
 
-Enjoy the installed and configured Red Hat Process Automation Manager 7.
+ * Red Hat Enterprise Application Platform archive (jboss-eap-7.2.0.zip) at https://developers.redhat.com/products/eap/download
+ * Red Hat Process Automation Manager deployable (rhpam-7.7.0-business-central-eap7-deployable.zip) at https://developers.redhat.com/products/rhpam/download
+ * Red Hat Process Automation Manager Process Server (KIE Server) deployable (rhpam-7.7.0-kie-server-ee8.zip) at https://developers.redhat.com/products/rhpam/download
+ * Red Hat Process Automation Manager add ons (rhpam-7.7.0-add-ons.zip) at https://developers.redhat.com/products/rhpam/download
 
+#### Run
 
-Installing on OpenShift Container Platform (CodeReady Containers)
-----------------------------------------------------------------
-Install this demo on your local machine using an OpenShift Container Platform development cluster can be done using 
-CodeReady Continers. It's fully automated and delivers a fully functioning container-native development experience:
+Enter in the folder project and launch
 
-[Code Ready Containers Red Hat Process Automation Easy Install](https://gitlab.com/redhatdemocentral/rhcs-rhpam-install-demo)
+```
+vagrant up
+```
 
+When vagrant provision ends, you can check installation here: http://192.168.42.42:8857
 
-Installing on any OpenShift Container Platform (generic)
--------------------------------------------------------
-This demo can be installed on your own version of OpenShift Container Platform. Options and guidance can be found 
-in [openshift support directory README](support/openshift/README.md).
+#### Notes
 
+Feel free to change settings for your use-cases.
 
-Supporting Articles
--------------------
-- [Getting Started with Red Hat Process Automation Manager 7](https://upload.wikimedia.org/wikipedia/commons/6/67/Learning_Curve_--_Coming_Soon_Placeholder.png)
-
-
-Released versions
------------------
-See the tagged releases for the following versions of the product:
-
-- v1.9 - Red Hat Process Automation Manager 7.8.0.GA
-- v1.8 - Red Hat Process Automation Manager 7.7.0.GA
-- v1.7 - Red Hat Process Automation Manager 7.5.0.GA
-- v1.6 - Red Hat Process Automation Manager 7.4.0.GA
-- v1.5 - Red Hat Process Automation Manager 7.3.0.GA
-- v1.4 - Red Hat Process Automation Manager 7.3.0.GA
-- v1.3 - Red Hat Process Automation Manager 7.1.0.GA
-- v1.2 - Red Hat Process Automation Manager 7.0.2.GA
-- v0.8 - Red Hat Process Automation Manager 7.0.0.ER2
-
-![RHPAM 7](https://raw.githubusercontent.com/jbossdemocentral/rhpam7-install-demo/master/docs/demo-images/rhpam7.png)
-
-![RHPAM 7 CASE](https://raw.githubusercontent.com/jbossdemocentral/rhpam7-install-demo/master/docs/demo-images/rhpam7-case.png)
-
+You can check and edit credentials in [init.sh](./init.sh)
+Make sure you have stated the same PATHS of the `init.sh` in [jboss-service.sh](./.support/jboss-service.sh)
