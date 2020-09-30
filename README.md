@@ -34,5 +34,6 @@ When vagrant provision ends, you can check installation here: http://192.168.42.
 
 Feel free to change settings for your use-cases.
 
-You can check and edit credentials in [init.sh](./init.sh)
-Make sure you have stated the same PATHS of the `init.sh` in [jboss-service.sh](./.support/jboss-service.sh)
+ - If you launch this demo without `vagrant`, check [init.sh](./init.sh) file and edit the variables (see CHANGE THESE comment)
+ - You can check and edit credentials in [init.sh](./init.sh)
+ - Make sure you have stated the same PATHS of the `init.sh` in [jboss-service.sh](./.support/jboss-service.sh)
