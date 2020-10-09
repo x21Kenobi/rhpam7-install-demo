@@ -37,3 +37,8 @@ Feel free to change settings for your use-cases.
  - If you launch this demo without `vagrant`, check [init.sh](./init.sh) file and edit the variables (see CHANGE THESE comment)
  - You can check and edit credentials in [init.sh](./init.sh)
  - Make sure you have stated the same PATHS of the `init.sh` in [jboss-service.sh](./.support/jboss-service.sh)
+
+#### Troubleshotings
+
+ * https://access.redhat.com/solutions/3519551
+ * https://access.redhat.com/solutions/5100821

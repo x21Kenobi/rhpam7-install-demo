@@ -162,7 +162,7 @@ cp $SUPPORT_DIR/standalone-full.xml $SERVER_CONF/standalone.xml
 
 echo "  - setup email task notification users..."
 echo
-cp $SUPPORT_DIR/userinfo.properties $SERVER_DIR/business-central.war/WEB-INF/classes/
+cp -r $SUPPORT_DIR/*.properties $SERVER_DIR/business-central.war/WEB-INF/classes/
 
 echo "  - making sure server is executable..."
 echo
